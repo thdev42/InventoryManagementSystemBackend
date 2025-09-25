@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const webToken = require("../webToken");
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, name, password, role } = req.body;
+  const { email, username, password, role } = req.body;
   const userAlreadyExist = await User.findOne({ where: { email } }).catch(
     (err) => {
       console.log("Error :", err);
@@ -18,7 +18,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const encryptedPassword = await bcrypt.hash(password, salt);
 
     const user = await User.create({
-      name: name,
+      username: username,
       email: email,
       password: encryptedPassword,
       role: role || "user",
@@ -27,10 +27,10 @@ const registerUser = asyncHandler(async (req, res) => {
     if (user) {
       res.json({
         id: user.id,
-        name: user.name,
+        username: user.username,
         email: user.email,
         role: user.role,
-        token: webToken(user.id, user.email),
+        token: webToken(user.id, user.username, user.email, user?.role),
       });
     } else {
       res.json({ message: "Cannot resgister at the moment" });
@@ -48,9 +48,14 @@ const loginUser = asyncHandler(async (req, res) => {
     } else {
       res.json({
         id: userExist.id,
-        name: userExist.name,
+        username: userExist.username,
         email: userExist.email,
-        token: webToken(userExist.id, userExist.email),
+        token: webToken(
+          userExist.id,
+          userExist?.username,
+          userExist.email,
+          userExist?.role
+        ),
         role: userExist.role,
       });
     }
@@ -62,7 +67,7 @@ const loginUser = asyncHandler(async (req, res) => {
 const getUserProfile = asyncHandler(async (req, res) => {
   try {
     const user = await User.findByPk(req?.user?.id, {
-      attributes: ["id", "name", "email", "role"],
+      attributes: ["id", "username", "email", "role"],
     });
 
     if (!user) {

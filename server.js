@@ -1,5 +1,7 @@
 const express = require("express");
 const userRoutes = require("./routes/userRoutes");
+const quotationRoutes = require("./routes/quotationRoutes");
+const inventoryRoutes = require("./routes/inventoryRoutes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -7,7 +9,7 @@ const sequelize = require("./config/database");
 const db = require("./models");
 
 app.use(express.json());
-sequelize.sync();
+// sequelize.sync();
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");
@@ -22,3 +24,5 @@ db.sequelize
   .catch((err) => console.error("❌ Sync error:", err));
 
 app.use("/api/auth", userRoutes);
+app.use("/api/quotations", quotationRoutes);
+app.use("/api/inventory", inventoryRoutes);

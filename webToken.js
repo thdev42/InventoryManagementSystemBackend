@@ -3,8 +3,10 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const webToken = (id, email) => {
-  return jwt.sign({ id, email }, process.env.JWT_SECRET);
+const webToken = (id, username, email, role) => {
+  return jwt.sign({ id, username, email, role }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN || "24h",
+  });
 };
 
 module.exports = webToken;

@@ -1,38 +1,41 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const User = sequelize.define(
-  "user",
-  {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    role: {
-      type: DataTypes.ENUM("user", "admin"),
-      allowNull: false,
-      defaultValue: "user",
+const User = sequelize.define("User", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true,
     },
   },
-  {
-    timestamps: true,
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.ENUM("admin", "manager", "user"),
+    defaultValue: "user",
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  },
+});
 
-    createdAt: true,
-
-    updatedAt: false,
-  }
-);
-// User.associations = (models) => {
-//   User.hasMany(models.Blog, {
-//     foreignKey: "creatorId",
-//   });
+// User.prototype.validatePassword = async function (password) {
+//   return bcrypt.compare(password, this.password);
 // };
+
 module.exports = User;
