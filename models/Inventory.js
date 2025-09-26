@@ -168,6 +168,16 @@ const Inventory = sequelize.define(
           }
         }
       },
+
+      // Delete Expense on Inventory DELETE
+      afterDestroy: async (inventory, options) => {
+        const { Expense } = require("./index");
+        console.log("TRIGGERED DELETE");
+        await Expense.destroy({
+          where: { inventoryId: inventory.id },
+          transaction: options.transaction,
+        });
+      },
     },
   }
 );

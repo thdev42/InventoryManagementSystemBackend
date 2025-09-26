@@ -2,6 +2,10 @@ const express = require("express");
 const userRoutes = require("./routes/userRoutes");
 const quotationRoutes = require("./routes/quotationRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
+const getDashboardDataRoutes = require("./routes/dasboardDataRoutes");
+const invoiceRoutes = require("./routes/invoiceRoutes");
+const expenseRoutes = require("./routes/expenseRoutes");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -26,3 +30,6 @@ db.sequelize
 app.use("/api/auth", userRoutes);
 app.use("/api/quotations", quotationRoutes);
 app.use("/api/inventory", inventoryRoutes);
+app.use("/api/dashboard", getDashboardDataRoutes);
+app.use("/api/invoices", invoiceRoutes);
+app.use("/api/expenses", expenseRoutes);

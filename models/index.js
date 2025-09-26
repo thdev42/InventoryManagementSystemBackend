@@ -37,8 +37,15 @@ Rental.belongsTo(Invoice, { foreignKey: "invoiceId" });
 Inventory.hasMany(Rental, { foreignKey: "inventoryId" });
 Rental.belongsTo(Inventory, { foreignKey: "inventoryId" });
 
-Inventory.hasMany(Expense, { foreignKey: "inventoryId" });
-Expense.belongsTo(Inventory, { foreignKey: "inventoryId" });
+Inventory.hasMany(Expense, {
+  foreignKey: "inventoryId",
+  onDelete: "CASCADE",
+  hooks: true,
+});
+Expense.belongsTo(Inventory, {
+  foreignKey: "inventoryId",
+  onDelete: "CASCADE",
+});
 
 User.hasMany(Expense, { foreignKey: "createdBy" });
 Expense.belongsTo(User, { foreignKey: "createdBy" });
@@ -52,5 +59,6 @@ const db = {
   Inventory,
   Invoice,
   InvoiceItem,
+  Rental,
 };
 module.exports = db;
